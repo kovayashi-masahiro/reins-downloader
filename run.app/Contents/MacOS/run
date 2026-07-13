@@ -1,0 +1,117 @@
+#!/bin/bash
+
+PROJECT_DIR="/Users/kobayashimasahiro/Documents/ai/reins-downloader"
+
+# AppleScript でメニュー選択ダイアログを表示
+CHOICE=$(osascript << 'APPLESCRIPT'
+set choiceList to {"通常実行（推奨）", "ブラウザ表示で実行（--headed）", "キャンセル"}
+set theChoice to choose from list choiceList with title "REINS ダウンロード" with prompt "実行方法を選択してください："
+
+if theChoice is false then
+    return "cancel"
+else
+    if theChoice contains "通常実行" then
+        return "normal"
+    else if theChoice contains "ブラウザ表示" then
+        return "headed"
+    else
+        return "cancel"
+    end if
+end if
+APPLESCRIPT
+)
+
+# 選択に応じたコマンドを実行
+case "$CHOICE" in
+    normal)
+        open -a Terminal << 'SHELL'
+cd "/Users/kobayashimasahiro/Documents/ai/reins-downloader"
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "REINS 新着・更新物件ダウンロード"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+if ! command -v python3 &> /dev/null; then
+    echo "❌ エラー: Python3 が見つかりません"
+    read -p "Enterを押して終了..."
+    exit 1
+fi
+
+if [ ! -f "reins_downloader.py" ]; then
+    echo "❌ エラー: reins_downloader.py が見つかりません"
+    read -p "Enterを押して終了..."
+    exit 1
+fi
+
+echo "実行中..."
+echo ""
+
+if python3 reins_downloader.py; then
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "✅ 完了しました"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "出力ファイル: downloads/ フォルダを確認してください"
+else
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "❌ エラーが発生しました"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "詳細は logs/ フォルダを確認してください"
+fi
+
+echo ""
+read -p "Enterを押して終了..."
+SHELL
+        ;;
+    headed)
+        open -a Terminal << 'SHELL'
+cd "/Users/kobayashimasahiro/Documents/ai/reins-downloader"
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "REINS 新着・更新物件ダウンロード"
+echo "（ブラウザ表示モード）"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+if ! command -v python3 &> /dev/null; then
+    echo "❌ エラー: Python3 が見つかりません"
+    read -p "Enterを押して終了..."
+    exit 1
+fi
+
+if [ ! -f "reins_downloader.py" ]; then
+    echo "❌ エラー: reins_downloader.py が見つかりません"
+    read -p "Enterを押して終了..."
+    exit 1
+fi
+
+echo "実行中（ブラウザウィンドウが開きます）..."
+echo ""
+
+if python3 reins_downloader.py --headed; then
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "✅ 完了しました"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "出力ファイル: downloads/ フォルダを確認してください"
+else
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "❌ エラーが発生しました"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "詳細は logs/ フォルダを確認してください"
+fi
+
+echo ""
+read -p "Enterを押して終了..."
+SHELL
+        ;;
+    *)
+        # キャンセルまたはエラー時は何もしない
+        exit 0
+        ;;
+esac
+
+exit 0

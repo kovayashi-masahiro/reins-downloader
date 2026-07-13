@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Mac用 自動実行設定（launchd）
+  毎日 朝7:00 に実行します。時刻を変えるには Hour / Minute を編集。
+
+  導入手順:
+    1) 下の /PATH/TO/reins-downloader を実際のフォルダの絶対パスに置き換える
+       （例: /Users/yourname/reins-downloader）
+    2) このファイルを ~/Library/LaunchAgents/ にコピー
+    3) ターミナルで:
+         launchctl load ~/Library/LaunchAgents/com.reins.daily.plist
+    解除する場合:
+         launchctl unload ~/Library/LaunchAgents/com.reins.daily.plist
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.reins.daily</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/PATH/TO/reins-downloader/reins_downloader.py</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>/PATH/TO/reins-downloader</string>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>8</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>/PATH/TO/reins-downloader/logs/launchd.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/PATH/TO/reins-downloader/logs/launchd.err.log</string>
+</dict>
+</plist>

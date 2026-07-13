@@ -1,0 +1,9 @@
+# 認証情報を除外
+config.yaml
+state/
+downloads/
+logs/
+__pycache__/
+*.pyc
+.DS_Store
+error_screenshot.png

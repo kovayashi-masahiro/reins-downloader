@@ -1,0 +1,65 @@
+# ============================================================
+#  REINS 自動ダウンロード設定ファイル
+#  このファイルを config.yaml という名前でコピーして編集してください
+# ============================================================
+
+login:
+  # REINS IP のログインURL（通常は変更不要）
+  url: "https://system.reins.jp/login/main/KG/GKG001200"
+  # ログイン情報（ご自身の正規アカウント）
+  user_id: "ここにユーザーID"
+  password: "ここにパスワード"
+
+search:
+  # 売買物件検索画面のURL（通常は変更不要）
+  page_url: "https://system.reins.jp/main/BK/GBK001210"
+  # この文字で始まる「保存済み検索条件（ワンタッチ検索）」だけを順に実行します
+  saved_search_prefix: "自動："
+  # 新着・更新の絞り込みは各保存条件の中で
+  #   登録年月日＝前日 / 変更年月日＝前日
+  # を設定しておくと、毎日その日の新着・更新だけが取得できます。
+  # （未設定の場合でも、下の重複排除により新規物件のみ保存されます）
+
+output:
+  # 保存先フォルダ（日付ごとにサブフォルダが作られます）
+  base_dir: "./downloads"
+  # 一覧をCSVで保存
+  save_csv: true
+  # 一覧をExcel(.xlsx)でも保存（openpyxl が必要）
+  save_xlsx: true
+
+pdf:
+  # ▼▼ 注意 ▼▼ PDF図面の取得（図面一括取得）は会員プランにより課金される場合があります。
+  # 課金を理解した上で取得する場合のみ true にしてください。既定は false（取得しない）。
+  download: false
+  # PDF取得時、1つの保存条件あたり取得する最大件数（課金抑制の安全弁。0で無制限）
+  max_per_search: 0
+
+run:
+  # true=画面を表示せず裏で実行 / false=ブラウザを表示（初回確認時はfalse推奨）
+  headless: true
+  # 1操作あたりの最大待機秒数
+  timeout_seconds: 30
+  # 同じ物件を二度保存しないための記録ファイル（物件番号＋価格＋取引状況で更新も検知）
+  state_file: "./state/downloaded.json"
+  # 結果一覧のページ送り最大数（保険）
+  max_pages: 20
+
+# ------------------------------------------------------------
+#  画面項目の指定（セレクタ／文言）
+#  REINSの画面更新で項目がずれた場合はここを調整します。
+# ------------------------------------------------------------
+selectors:
+  login_user_id: "input[type='text']"
+  login_password: "input[type='password']"
+  login_agree_label: "所属機構の規程及びガイドラインを遵守します"
+  login_button_text: "ログイン"
+  saved_search_load_text: "読込"
+  dialog_ok_text: "OK"
+  search_button_text: "検索"
+  bulk_pdf_text: "図面一括取得"
+  select_all_text: "ページ内全選択"
+
+# ログイン時に「規程及びガイドラインを遵守します」へ自動でチェックを入れるか。
+# true にすることは、ご自身が当該規程・ガイドラインの遵守に同意することを意味します。
+agree_compliance: true
